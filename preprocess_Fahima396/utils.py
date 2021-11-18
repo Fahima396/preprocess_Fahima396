@@ -6,9 +6,13 @@ import pandas as pd
 import numpy as np
 import spacy
 from spacy.lang.en.stop_words import STOP_WORDS as stopwords
+
 from bs4 import BeautifulSoup
 import unicodedata
 from textblob import TextBlob
+import warnings
+
+nlp = spacy.load('en_core_web_sm')
 
 def _get_wordcounts(x):
 	length = len(str(x).split())
@@ -41,7 +45,7 @@ def _get_digit_Counts(x):
 def _get_uppercase_counts(x):
 	return len([t for t in x.split() if t.isupper()])
 
-def _get_cont_exp(x):
+def _cont_exp(x):
 	contractions = {
 
 	"ain't": "am not",
@@ -151,17 +155,20 @@ def _make_to_base(x):
 		x_list.append(lemma)
 	return ' '.join(x_list)
 
-def _remove_common_words(x, n=20):
+def _get_value_counts(df, col):
+	text = ' '.join(df['col'])
 	text = x.split()
-	freq_comm = pd.Series(text).value_counts()
+	freq = pd.Series(text).value_counts()
+    return freq
+
+def _remove_common_words(x, freq, n=20):
 	fn = freq_Comm[:n]
 
 	x = ' '.join([ t for t in x.split() if t not in fn])
 	return x
 
-def _remove_rarewords(x, n=20):
-	text = x.split()
-	freq_comm = pd.Series(text).value_counts()
+def _remove_rarewords(x, freq n=20):
+	
 	fn = freq_Comm.tail(n)
 
 	x = ' '.join([ t for t in x.split() if t not in fn])
@@ -171,6 +178,10 @@ def _spelling_correction(x):
 	x = TextBlob(x).correct()
 	return x
 
+
+with warnings.catch_warnings():
+    warnings.filterwarnings("ignore", message="divide by zero encountered in divide")
+    # .. your divide-by-zero code ..
 
 
 
