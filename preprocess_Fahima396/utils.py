@@ -5,12 +5,12 @@ import sys
 import pandas as pd
 import numpy as np
 import spacy
-from spacy.lang.en.stop_words import STOP_WORDS as stopwords
 
+from spacy.lang.en.stop_words import STOP_WORDS as stopwords
 from bs4 import BeautifulSoup
 import unicodedata
 from textblob import TextBlob
-import warnings
+
 
 nlp = spacy.load('en_core_web_sm')
 
@@ -159,7 +159,7 @@ def _get_value_counts(df, col):
 	text = ' '.join(df['col'])
 	text = x.split()
 	freq = pd.Series(text).value_counts()
-    return freq
+	return freq
 
 def _remove_common_words(x, freq, n=20):
 	fn = freq_Comm[:n]
@@ -167,7 +167,7 @@ def _remove_common_words(x, freq, n=20):
 	x = ' '.join([ t for t in x.split() if t not in fn])
 	return x
 
-def _remove_rarewords(x, freq n=20):
+def _remove_rarewords(x, freq, n=20):
 	
 	fn = freq_Comm.tail(n)
 
@@ -179,9 +179,6 @@ def _spelling_correction(x):
 	return x
 
 
-with warnings.catch_warnings():
-    warnings.filterwarnings("ignore", message="divide by zero encountered in divide")
-    # .. your divide-by-zero code ..
 
 
 
